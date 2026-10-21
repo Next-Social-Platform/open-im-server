@@ -228,6 +228,10 @@ type Push struct {
 		PushURL      string `mapstructure:"pushURL"`
 		PushIntent   string `mapstructure:"pushIntent"`
 	} `mapstructure:"jpush"`
+	Nsp struct {
+		Address string `mapstructure:"address"`
+		Timeout int    `mapstructure:"timeout"`
+	} `mapstructure:"nsp"`
 	IOSPush struct {
 		PushSound  string `mapstructure:"pushSound"`
 		BadgeCount bool   `mapstructure:"badgeCount"`

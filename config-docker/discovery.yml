@@ -1,0 +1,8 @@
+enable: etcd
+etcd:
+  rootDirectory: openim
+  address: [ etcd:2379 ]
+  username: ''
+  password: ''
+
+

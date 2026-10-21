@@ -1,0 +1,22 @@
+services:
+  openim-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      additional_contexts:
+        modcache: /Users/batxac/go/pkg/mod
+    container_name: openim-server
+    depends_on:
+      - mongodb
+      - redis
+      - etcd
+      - kafka
+      - minio
+    ports:
+      - "10002:10002"   # openim-api (HTTP)
+      - "10001:10001"   # openim-msggateway (WebSocket)
+    volumes:
+      - ./config-docker:/openim-server/config
+    restart: unless-stopped
+    networks:
+      - openim

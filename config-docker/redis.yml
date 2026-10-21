@@ -1,0 +1,8 @@
+address: [ redis:6379 ]
+username: 
+password: openIM123
+# redisMode can be "cluster", "sentinel", or "standalone"
+redisMode: "standalone"
+db: 0
+maxRetry: 10
+poolSize: 100

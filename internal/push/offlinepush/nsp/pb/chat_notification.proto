@@ -1,0 +1,23 @@
+// Subset of community_user src/main/proto/auth.proto. Package and service names
+// must match the original so the gRPC method path resolves on the server.
+syntax = "proto3";
+
+package mn.nextsocial.user;
+
+option go_package = "github.com/openimsdk/open-im-server/v3/internal/push/offlinepush/nsp/pb";
+
+service AuthService {
+  rpc SendChatNotification(SendChatNotificationRequest) returns (SendChatNotificationResponse);
+}
+
+message SendChatNotificationRequest {
+  repeated string chatUserId = 1;
+  string title = 2;
+  string content = 3;
+  string data = 4; // JSON string, may be empty
+}
+
+message SendChatNotificationResponse {
+  int32 success = 1;
+  string message = 2;
+}
