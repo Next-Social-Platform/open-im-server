@@ -1,6 +1,7 @@
-url: http://127.0.0.1:10006/callbackExample
+# nsp-chat-server admin-api (internal/api/nsp/start.go). Prod: IMENV_WEBHOOKS_URL
+url: http://nsp-chat-server:10009/nsp
 beforeSendSingleMsg:
-  enable: false
+  enable: true
   timeout: 5
   failedContinue: true
   # Only the contentType in allowedTypes will send the callback.
@@ -30,7 +31,7 @@ afterSendSingleMsg:
   allowedTypes: []
   deniedTypes: []
 beforeSendGroupMsg:
-  enable: false
+  enable: true
   timeout: 5
   failedContinue: true
   # See beforeSendSingleMsg comment.
@@ -71,7 +72,7 @@ beforeGroupOnlinePush:
   timeout: 5
   failedContinue: true
 beforeAddFriend:
-  enable: false
+  enable: true
   timeout: 5
   failedContinue: true
 beforeUpdateUserInfo:
@@ -82,14 +83,14 @@ afterUpdateUserInfo:
   enable: false
   timeout: 5
 beforeCreateGroup:
-  enable: false
+  enable: true
   timeout: 5
   failedContinue: true
 afterCreateGroup:
   enable: false
   timeout: 5
 beforeMemberJoinGroup:
-  enable: false
+  enable: true
   timeout: 5
   failedContinue: true
 beforeSetGroupMemberInfo:
@@ -142,7 +143,7 @@ afterJoinGroup:
   enable: false
   timeout: 5
 beforeInviteUserToGroup:
-  enable: false
+  enable: true
   timeout: 5
   failedContinue: true
 afterSetGroupInfo:

@@ -11,11 +11,11 @@ groupCreated:
     # Enables or disables offline push notifications.
     enable: false
     # Title for the notification when a group is created.
-    title: create group title
+    title: "Шинэ групп"
     # Description for the notification.
-    desc: create group desc
+    desc: "Та шинэ группт нэмэгдлээ"
     # Additional information for the notification.
-    ext: create group ext
+    ext: ""
 
 groupInfoSet:
   isSendMsg: false
@@ -23,9 +23,9 @@ groupInfoSet:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupInfoSet title
-    desc: groupInfoSet desc
-    ext: groupInfoSet ext
+    title: "Группийн мэдээлэл"
+    desc: "Группийн мэдээлэл өөрчлөгдлөө"
+    ext: ""
 
 
 joinGroupApplication:
@@ -34,9 +34,9 @@ joinGroupApplication:
   unreadCount: false
   offlinePush:
     enable: true
-    title: joinGroupApplication title
-    desc: joinGroupApplication desc
-    ext: joinGroupApplication ext
+    title: "Группт элсэх хүсэлт"
+    desc: "Группт элсэх шинэ хүсэлт ирлээ"
+    ext: ""
 
 memberQuit:
   isSendMsg: true
@@ -44,9 +44,9 @@ memberQuit:
   unreadCount: false
   offlinePush:
     enable: false
-    title: memberQuit title
-    desc: memberQuit desc
-    ext: memberQuit ext
+    title: "Групп"
+    desc: "Гишүүн группээс гарлаа"
+    ext: ""
 
 groupApplicationAccepted:
   isSendMsg: false
@@ -54,9 +54,9 @@ groupApplicationAccepted:
   unreadCount: false
   offlinePush:
     enable: true
-    title: groupApplicationAccepted title
-    desc: groupApplicationAccepted desc
-    ext: groupApplicationAccepted ext
+    title: "Хүсэлт зөвшөөрөгдлөө"
+    desc: "Группт элсэх хүсэлт зөвшөөрөгдлөө"
+    ext: ""
 
 groupApplicationRejected:
   isSendMsg: false
@@ -64,9 +64,9 @@ groupApplicationRejected:
   unreadCount: false
   offlinePush:
     enable: true
-    title: groupApplicationRejected title
-    desc: groupApplicationRejected desc
-    ext: groupApplicationRejected ext
+    title: "Хүсэлт татгалзагдлаа"
+    desc: "Группт элсэх хүсэлт татгалзагдлаа"
+    ext: ""
 
 
 groupOwnerTransferred:
@@ -75,9 +75,9 @@ groupOwnerTransferred:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupOwnerTransferred title
-    desc: groupOwnerTransferred desc
-    ext: groupOwnerTransferred ext
+    title: "Групп"
+    desc: "Группийн эзэн солигдлоо"
+    ext: ""
 
 memberKicked:
   isSendMsg: true
@@ -85,9 +85,9 @@ memberKicked:
   unreadCount: false
   offlinePush:
     enable: false
-    title: memberKicked title
-    desc: memberKicked desc
-    ext: memberKicked ext
+    title: "Групп"
+    desc: "Гишүүн группээс хасагдлаа"
+    ext: ""
 
 memberInvited:
   isSendMsg: true
@@ -95,9 +95,9 @@ memberInvited:
   unreadCount: false
   offlinePush:
     enable: false
-    title: memberInvited title
-    desc: memberInvited desc
-    ext: memberInvited ext
+    title: "Групп"
+    desc: "Группт шинэ гишүүн нэмэгдлээ"
+    ext: ""
 
 memberEnter:
   isSendMsg: true
@@ -105,9 +105,9 @@ memberEnter:
   unreadCount: false
   offlinePush:
     enable: false
-    title: memberEnter title
-    desc: memberEnter desc
-    ext: memberEnter ext
+    title: "Групп"
+    desc: "Группт шинэ гишүүн нэгдлээ"
+    ext: ""
 
 groupDismissed:
   isSendMsg: true
@@ -115,9 +115,9 @@ groupDismissed:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupDismissed title
-    desc: groupDismissed desc
-    ext: groupDismissed ext
+    title: "Групп"
+    desc: "Групп татан буугдлаа"
+    ext: ""
 
 groupMuted:
   isSendMsg: true
@@ -125,9 +125,9 @@ groupMuted:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupMuted title
-    desc: groupMuted desc
-    ext: groupMuted ext
+    title: "Групп"
+    desc: "Группт мессеж бичих эрх хаагдлаа"
+    ext: ""
 
 groupCancelMuted:
   isSendMsg: true
@@ -135,9 +135,9 @@ groupCancelMuted:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupCancelMuted title
-    desc: groupCancelMuted desc
-    ext: groupCancelMuted ext
+    title: "Групп"
+    desc: "Группт мессеж бичих эрх нээгдлээ"
+    ext: ""
   defaultTips:
     tips: group Cancel Muted
 
@@ -148,9 +148,9 @@ groupMemberMuted:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupMemberMuted title
-    desc: groupMemberMuted desc
-    ext: groupMemberMuted ext
+    title: "Групп"
+    desc: "Гишүүний мессеж бичих эрх хаагдлаа"
+    ext: ""
 
 groupMemberCancelMuted:
   isSendMsg: true
@@ -158,9 +158,9 @@ groupMemberCancelMuted:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupMemberCancelMuted title
-    desc: groupMemberCancelMuted desc
-    ext: groupMemberCancelMuted ext
+    title: "Групп"
+    desc: "Гишүүний мессеж бичих эрх нээгдлээ"
+    ext: ""
 
 groupMemberInfoSet:
   isSendMsg: false
@@ -168,9 +168,9 @@ groupMemberInfoSet:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupMemberInfoSet title
-    desc: groupMemberInfoSet desc
-    ext: groupMemberInfoSet ext
+    title: "Групп"
+    desc: "Гишүүний мэдээлэл өөрчлөгдлөө"
+    ext: ""
 
 groupInfoSetAnnouncement:
   isSendMsg: true
@@ -178,9 +178,9 @@ groupInfoSetAnnouncement:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupInfoSetAnnouncement title
-    desc: groupInfoSetAnnouncement desc
-    ext: groupInfoSetAnnouncement ext
+    title: "Группийн зарлал"
+    desc: "Группийн зарлал шинэчлэгдлээ"
+    ext: ""
 
 
 groupInfoSetName:
@@ -189,9 +189,9 @@ groupInfoSetName:
   unreadCount: false
   offlinePush:
     enable: false
-    title: groupInfoSetName title
-    desc: groupInfoSetName desc
-    ext: groupInfoSetName ext
+    title: "Групп"
+    desc: "Группийн нэр өөрчлөгдлөө"
+    ext: ""
 
 
 #############################friend#################################
@@ -201,9 +201,9 @@ friendApplicationAdded:
   unreadCount: false
   offlinePush:
     enable: true
-    title: Somebody applies to add you as a friend
-    desc: Somebody applies to add you as a friend
-    ext: Somebody applies to add you as a friend
+    title: "Найз болох хүсэлт"
+    desc: "Танд найз болох хүсэлт ирлээ"
+    ext: ""
 
 friendApplicationApproved:
   isSendMsg: true
@@ -211,9 +211,9 @@ friendApplicationApproved:
   unreadCount: false
   offlinePush:
     enable: true
-    title: Someone applies to add your friend application
-    desc: Someone applies to add your friend application
-    ext: Someone applies to add your friend application
+    title: "Найз болох хүсэлт"
+    desc: "Найз болох хүсэлт зөвшөөрөгдлөө"
+    ext: ""
 
 friendApplicationRejected:
   isSendMsg: false
@@ -221,9 +221,9 @@ friendApplicationRejected:
   unreadCount: false
   offlinePush:
     enable: true
-    title: Someone rejected your friend application
-    desc: Someone rejected your friend application
-    ext: Someone rejected your friend application
+    title: "Найз болох хүсэлт"
+    desc: "Найз болох хүсэлт татгалзагдлаа"
+    ext: ""
 
 friendAdded:
   isSendMsg: false
@@ -231,9 +231,9 @@ friendAdded:
   unreadCount: false
   offlinePush:
     enable: false
-    title: We have become friends
-    desc: We have become friends
-    ext: We have become friends
+    title: "Шинэ найз"
+    desc: "Найзаар нэмэгдлээ"
+    ext: ""
 
 friendDeleted:
   isSendMsg: false
@@ -241,9 +241,9 @@ friendDeleted:
   unreadCount: false
   offlinePush:
     enable: false
-    title: deleted a friend
-    desc: deleted a friend
-    ext: deleted a friend
+    title: "Найз"
+    desc: "Найзын жагсаалтаас хасагдлаа"
+    ext: ""
 
 friendRemarkSet:
   isSendMsg: false
@@ -251,9 +251,9 @@ friendRemarkSet:
   unreadCount: false
   offlinePush:
     enable: false
-    title: Your friend's profile has been changed
-    desc: Your friend's profile has been changed
-    ext: Your friend's profile has been changed
+    title: "Найз"
+    desc: "Найзын тэмдэглэл өөрчлөгдлөө"
+    ext: ""
 
 blackAdded:
   isSendMsg: false
@@ -261,9 +261,9 @@ blackAdded:
   unreadCount: false
   offlinePush:
     enable: false
-    title: blocked a user
-    desc: blocked a user
-    ext: blocked a user
+    title: "Хар жагсаалт"
+    desc: "Хар жагсаалтад нэмэгдлээ"
+    ext: ""
 
 blackDeleted:
   isSendMsg: false
@@ -271,9 +271,9 @@ blackDeleted:
   unreadCount: false
   offlinePush:
     enable: false
-    title: Remove a blocked user
-    desc: Remove a blocked user
-    ext: Remove a blocked user
+    title: "Хар жагсаалт"
+    desc: "Хар жагсаалтаас хасагдлаа"
+    ext: ""
 
 friendInfoUpdated:
   isSendMsg: false
@@ -281,9 +281,9 @@ friendInfoUpdated:
   unreadCount: false
   offlinePush:
     enable: false
-    title: friend info updated
-    desc: friend info updated
-    ext: friend info updated
+    title: "Найз"
+    desc: "Найзын мэдээлэл шинэчлэгдлээ"
+    ext: ""
 
 #####################user#########################
 userInfoUpdated:
@@ -292,9 +292,9 @@ userInfoUpdated:
   unreadCount: false
   offlinePush:
     enable: false
-    title: userInfo updated
-    desc: userInfo updated
-    ext: userInfo updated
+    title: "Хэрэглэгч"
+    desc: "Хэрэглэгчийн мэдээлэл шинэчлэгдлээ"
+    ext: ""
 
 userStatusChanged:
   isSendMsg: false
@@ -302,9 +302,9 @@ userStatusChanged:
   unreadCount: false
   offlinePush:
     enable: false
-    title: user status changed
-    desc: user status changed
-    ext: user status changed
+    title: "Хэрэглэгч"
+    desc: "Хэрэглэгчийн төлөв өөрчлөгдлөө"
+    ext: ""
 
 #####################conversation#########################
 conversationChanged:
@@ -313,9 +313,9 @@ conversationChanged:
   unreadCount: false
   offlinePush:
     enable: false
-    title: conversation changed
-    desc: conversation changed
-    ext: conversation changed
+    title: "Чат"
+    desc: "Чатын тохиргоо өөрчлөгдлөө"
+    ext: ""
 
 conversationSetPrivate:
   isSendMsg: true
@@ -323,6 +323,6 @@ conversationSetPrivate:
   unreadCount: false
   offlinePush:
     enable: false
-    title: burn after reading
-    desc: burn after reading
-    ext: burn after reading
+    title: "Чат"
+    desc: "Нууц чатын тохиргоо өөрчлөгдлөө"
+    ext: ""
