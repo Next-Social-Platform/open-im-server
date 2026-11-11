@@ -50,7 +50,7 @@ func NewOfflinePusher(pushConf *config.Push, cache cache.ThirdCache, fcmConfigPa
 	case jPush:
 		offlinePusher = jpush.NewClient(pushConf)
 	case nspPush:
-		return nsp.NewClient(pushConf)
+		return nsp.NewClient(pushConf, cache)
 	default:
 		offlinePusher = dummy.NewClient()
 	}

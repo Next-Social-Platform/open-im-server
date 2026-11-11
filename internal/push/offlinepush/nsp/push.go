@@ -3,13 +3,16 @@ package nsp
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/openimsdk/open-im-server/v3/internal/push/offlinepush/nsp/pb"
 	"github.com/openimsdk/open-im-server/v3/internal/push/offlinepush/options"
 	"github.com/openimsdk/open-im-server/v3/pkg/common/config"
+	"github.com/openimsdk/open-im-server/v3/pkg/common/storage/cache"
 	"github.com/openimsdk/tools/errs"
 	"github.com/openimsdk/tools/log"
+	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -20,6 +23,7 @@ const defaultTimeout = 5 * time.Second
 // which resolves chat user IDs to device tokens and sends via FCM/APNs.
 type Nsp struct {
 	client  pb.AuthServiceClient
+	cache   cache.ThirdCache
 	timeout time.Duration
 }
 
@@ -31,9 +35,12 @@ type pushData struct {
 	// мэдэгдэл (friend request accept/reject гэх мэт, insert ХИЙХ ёстой)-ийг
 	// ялгана (2026-11-04).
 	ContentType int32 `json:"contentType,omitempty"`
+	// Badge — хэрэглэгчийн app icon дээр харуулах уншаагүй мессежийн тоо (iOS aps.badge).
+	// Хэрэглэгч бүрт өөр тул хэрэглэгч тус бүрээр тусад нь илгээнэ.
+	Badge int `json:"badge,omitempty"`
 }
 
-func NewClient(pushConf *config.Push) (*Nsp, error) {
+func NewClient(pushConf *config.Push, cache cache.ThirdCache) (*Nsp, error) {
 	if pushConf.Nsp.Address == "" {
 		return nil, errs.New("no nsp push address config").Wrap()
 	}
@@ -45,7 +52,7 @@ func NewClient(pushConf *config.Push) (*Nsp, error) {
 	if pushConf.Nsp.Timeout > 0 {
 		timeout = time.Duration(pushConf.Nsp.Timeout) * time.Second
 	}
-	return &Nsp{client: pb.NewAuthServiceClient(conn), timeout: timeout}, nil
+	return &Nsp{client: pb.NewAuthServiceClient(conn), cache: cache, timeout: timeout}, nil
 }
 
 func (n *Nsp) Push(ctx context.Context, userIDs []string, title, content string, opts *options.Opts) error {
@@ -56,6 +63,43 @@ func (n *Nsp) Push(ctx context.Context, userIDs []string, title, content string,
 	if opts.Signal != nil {
 		data.ClientMsgID = opts.Signal.ClientMsgID
 	}
+	if n.cache == nil {
+		return n.send(ctx, userIDs, title, content, data)
+	}
+	var firstErr error
+	for _, userID := range userIDs {
+		userData := data
+		userData.Badge = n.badge(ctx, userID, opts.IOSBadgeCount)
+		if err := n.send(ctx, []string{userID}, title, content, userData); err != nil && firstErr == nil {
+			firstErr = err
+		}
+	}
+	return firstErr
+}
+
+// badge FCM pusher-тэй ижил дүрмээр badge-ийг тооцно: IOSBadgeCount үед нэмэгдүүлнэ,
+// үгүй бол одоогийн утгыг (байхгүй бол 1) авна.
+func (n *Nsp) badge(ctx context.Context, userID string, incr bool) int {
+	if incr {
+		count, err := n.cache.IncrUserBadgeUnreadCountSum(ctx, userID)
+		if err != nil {
+			log.ZWarn(ctx, "nsp push incr badge failed", err, "userID", userID)
+			return 0
+		}
+		return count
+	}
+	count, err := n.cache.GetUserBadgeUnreadCountSum(ctx, userID)
+	if err != nil && !errors.Is(err, redis.Nil) {
+		log.ZWarn(ctx, "nsp push get badge failed", err, "userID", userID)
+		return 0
+	}
+	if count == 0 {
+		return 1
+	}
+	return count
+}
+
+func (n *Nsp) send(ctx context.Context, userIDs []string, title, content string, data pushData) error {
 	b, err := json.Marshal(data)
 	if err != nil {
 		return errs.WrapMsg(err, "marshal nsp push data failed")
