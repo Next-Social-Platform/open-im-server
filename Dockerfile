@@ -26,34 +26,28 @@ COPY . .
 
 # Optionally build your application if needed
 # The Go build cache lives in a cache mount so it is reused between builds and stays out of the image layers
-RUN --mount=type=cache,target=/root/.cache/go-build mage build
+# RELEASE=true builds with -trimpath -ldflags "-s -w" (no debug info, much smaller binaries).
+# The magefile is compiled into a standalone binary as well, so the final image needs neither
+# the Go toolchain nor the module cache to run `mage start` / `mage check`.
+RUN --mount=type=cache,target=/root/.cache/go-build RELEASE=true mage build && mage -compile /openim-server/mage-static
 
-# Using Alpine Linux with Go environment for the final image
-FROM golang:1.25-alpine
+# Plain Alpine for the final image: binaries and the compiled magefile only
+FROM alpine:3.22
 
 # Install necessary packages, such as bash
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash ca-certificates tzdata
 
 # Set the environment and work directory
 ENV SERVER_DIR=/openim-server
 WORKDIR $SERVER_DIR
 
-
-# Copy the compiled binaries and mage from the builder image to the final image
+# Copy the compiled binaries and mage from the builder image to the final image.
+# The compiled magefile is installed as `mage`, so `mage start` and the compose healthcheck
+# `mage check` keep working.
 COPY --from=builder $SERVER_DIR/_output $SERVER_DIR/_output
 COPY --from=builder $SERVER_DIR/config $SERVER_DIR/config
-COPY --from=builder /go/bin/mage /usr/local/bin/mage
-COPY --from=builder $SERVER_DIR/magefile_windows.go $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/magefile_unix.go $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/magefile.go $SERVER_DIR/
+COPY --from=builder $SERVER_DIR/mage-static /usr/local/bin/mage
 COPY --from=builder $SERVER_DIR/start-config.yml $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/version $SERVER_DIR/version
-COPY --from=builder $SERVER_DIR/go.mod $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/go.sum $SERVER_DIR/
-
-# Reuse the module cache the builder stage already resolved (matches go.mod's
-# github.com/openimsdk/gomake version) so `mage start`'s runtime compile needs no network
-COPY --from=builder /go/pkg/mod /go/pkg/mod
 
 # Set the command to run when the container starts
 ENTRYPOINT ["sh", "-c", "mage start && tail -f /dev/null"]
