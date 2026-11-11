@@ -119,7 +119,7 @@ func pushPreview(msg *sdkws.MsgData) string {
 
 // getOfflinePushInfos returns the title, body and options of the offline push of msg.
 func getOfflinePushInfos(msg *sdkws.MsgData) (title, content string, opts *options.Opts, err error) {
-	opts = &options.Opts{Signal: &options.Signal{ClientMsgID: msg.ClientMsgID}}
+	opts = &options.Opts{Signal: &options.Signal{ClientMsgID: msg.ClientMsgID}, ContentType: msg.ContentType}
 	if msg.OfflinePushInfo != nil {
 		opts.IOSBadgeCount = msg.OfflinePushInfo.IOSBadgeCount
 		opts.IOSPushSound = msg.OfflinePushInfo.IOSPushSound

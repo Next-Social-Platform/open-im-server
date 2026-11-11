@@ -26,6 +26,11 @@ type Nsp struct {
 type pushData struct {
 	ClientMsgID string `json:"clientMsgID,omitempty"`
 	Ex          string `json:"ex,omitempty"`
+	// ContentType — community_user (NotificationService.sendToChatUsers) үүгээр
+	// жинхэнэ чатын мессеж (insert ХИЙХГҮЙ, зөвхөн push) ба OpenIM-ийн дотоод
+	// мэдэгдэл (friend request accept/reject гэх мэт, insert ХИЙХ ёстой)-ийг
+	// ялгана (2026-11-04).
+	ContentType int32 `json:"contentType,omitempty"`
 }
 
 func NewClient(pushConf *config.Push) (*Nsp, error) {
@@ -47,7 +52,7 @@ func (n *Nsp) Push(ctx context.Context, userIDs []string, title, content string,
 	if len(userIDs) == 0 {
 		return nil
 	}
-	data := pushData{Ex: opts.Ex}
+	data := pushData{Ex: opts.Ex, ContentType: opts.ContentType}
 	if opts.Signal != nil {
 		data.ClientMsgID = opts.Signal.ClientMsgID
 	}
