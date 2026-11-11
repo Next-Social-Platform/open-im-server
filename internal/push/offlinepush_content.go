@@ -17,6 +17,8 @@ const (
 	pushNewMsgTitle   = "Шинэ мессеж"
 	pushNewMsgContent = "Танд шинэ мессеж ирлээ"
 	pushCallContent   = "Танд дуудлага ирлээ"
+	// pushFriendApplicationContent follows the applicant's nickname.
+	pushFriendApplicationContent = " найз болох хүсэлт илгээлээ"
 	// pushPreviewMaxRunes keeps the push body short; FCM/APNs payloads are limited to 4KB.
 	pushPreviewMaxRunes = 100
 )
@@ -36,6 +38,10 @@ var pushContentTypeText = map[int32]string{
 // sender left them empty: the sender (single chat) or group name (group chat) as the title, and a
 // preview of the message as the body. Notifications keep the texts of notification.yml.
 func (c *ConsumerHandler) fillOfflinePushInfo(ctx context.Context, msg *sdkws.MsgData) {
+	if msg.ContentType == constant.FriendApplicationNotification {
+		c.fillFriendApplicationPushInfo(ctx, msg)
+		return
+	}
 	if msg.ContentType >= constant.NotificationBegin && msg.ContentType <= constant.NotificationEnd {
 		return
 	}
@@ -64,6 +70,32 @@ func (c *ConsumerHandler) fillOfflinePushInfo(ctx context.Context, msg *sdkws.Ms
 	if info.Desc == "" {
 		info.Desc = content
 	}
+	msg.OfflinePushInfo = info
+}
+
+// fillFriendApplicationPushInfo puts the applicant's nickname into the body of the friend request push,
+// keeping the title and the rest of the notification.yml push info.
+func (c *ConsumerHandler) fillFriendApplicationPushInfo(ctx context.Context, msg *sdkws.MsgData) {
+	if c.userClient == nil || msg.SendID == "" {
+		return
+	}
+	nickname := msg.SenderNickname
+	if nickname == "" {
+		user, err := c.userClient.GetUserInfo(ctx, msg.SendID)
+		if err != nil {
+			log.ZWarn(ctx, "get applicant info for friend request push failed", err, "userID", msg.SendID)
+			return
+		}
+		nickname = user.Nickname
+	}
+	if nickname == "" {
+		return
+	}
+	info := &sdkws.OfflinePushInfo{}
+	if msg.OfflinePushInfo != nil {
+		info = proto.Clone(msg.OfflinePushInfo).(*sdkws.OfflinePushInfo)
+	}
+	info.Desc = nickname + pushFriendApplicationContent
 	msg.OfflinePushInfo = info
 }
 
