@@ -169,6 +169,12 @@ func (c *ConsumerHandler) Push2User(ctx context.Context, userIDs []string, msg *
 	if !c.shouldPushOffline(ctx, msg) {
 		return nil
 	}
+	// Өөртөө илгээсэн (EduChat "Хадгалсан мессеж", si_<me>_<me>) — хүлээн авагч = илгээгч тул доорх
+	// "илгээгчийг алгас" давталт онлайн хүргэлтийг хэзээ ч тоолохгүй, мессеж бүрт өөр рүүгээ offline push
+	// явдаг байсан (2026-11-14). Өөртөө push хэрэггүй.
+	if msg.SendID == msg.RecvID {
+		return nil
+	}
 	log.ZInfo(ctx, "pushOffline start")
 
 	for _, v := range wsResults {
