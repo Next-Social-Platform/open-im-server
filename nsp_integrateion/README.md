@@ -197,9 +197,23 @@ config/webhooks.yml    → url           ⇒  IMENV_WEBHOOKS_URL
 
 ```
 OPENIM_SERVER_IMAGE=repo.nextsocial.mn/nsp-openim-server:v3.8.3-patch.16-nsp-xxxxxxx
-NSP_PUSH_ADDRESS=host.docker.internal:9081          # community_user gRPC
+NSP_PUSH_ADDRESS=community-user:9081                # community_user gRPC (openim docker сүлжээгээр)
 NSP_WEBHOOK_URL=http://host.docker.internal:10009/nsp   # nsp-chat-server admin-api
 ```
+
+> **NSP_PUSH_ADDRESS — host хаяг биш, container нэр.** 2026-11-17-оос educhat_mono-ийн `docker-compose.yml`
+> java сервисүүдийг `network_mode: host`-оос docker сүлжээ рүү шилжүүлсэн: `community-user` gRPC 9081-ийг
+> host дээр нээхээ больж, зөвхөн OpenIM-ийн сүлжээнд (`openim-docker_openim`) `community-user:9081` нэрээр хүрэгдэнэ.
+> Хуучин `172.23.0.1:9081` / `host.docker.internal:9081` үлдсэн тул 11-17 → 11-18 хооронд чатын push бүгд
+> `dial tcp 172.23.0.1:9081: connect: connection refused`-ээр унаж байв (prod `.env` засаж `up -d openim-server`).
+>
+> Шалгах:
+> ```bash
+> docker exec openim-server env | grep NSP_ADDRESS        # community-user:9081
+> docker inspect -f '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}' community-user   # openim-docker_openim агуулна
+> docker exec openim-server sh -c 'grep -a "SendChatNotification failed" /openim-server/_output/logs/openim-service-log.$(date +%F) | tail -3'
+> ```
+> Prod-ийн OpenIM `.env` (`/home/www/repo/openim-docker/.env`) git-д байхгүй — сервер дээрх файл нь эх үүсвэр.
 
 Шинэчлэх:
 
