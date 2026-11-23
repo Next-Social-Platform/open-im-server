@@ -1019,12 +1019,36 @@ func (s *groupServer) deleteMemberAndSetConversationSeq(ctx context.Context, gro
 	if err != nil {
 		return err
 	}
-	return s.conversationClient.SetConversationMaxSeq(ctx, conversationID, userIDs, maxSeq)
+	return s.setConversationMaxSeq(ctx, conversationID, userIDs, maxSeq)
 }
 
+// setMemberJoinSeq clears the max seq that was set when the users last left the group (0 = no limit), so a
+// user who rejoins sees new messages again.
+//
+// NSP: SetConversationMaxSeq can not be used here — SetConversationMaxSeqReq.Check in
+// github.com/openimsdk/protocol v0.0.73 rejects MaxSeq <= 0 ("maxSeq is invalid"), so every invite/join
+// failed with 1001 after the members had already been added. See setConversationMaxSeq.
 func (s *groupServer) setMemberJoinSeq(ctx context.Context, groupID string, userIDs []string) error {
+	if len(userIDs) == 0 {
+		return nil
+	}
 	conversationID := msgprocessor.GetConversationIDBySessionType(constant.ReadGroupChatType, groupID)
-	return s.conversationClient.SetConversationMaxSeq(ctx, conversationID, userIDs, 0)
+	return s.setConversationMaxSeq(ctx, conversationID, userIDs, 0)
+}
+
+// setConversationMaxSeq does what conversation SetConversationMaxSeq does (the user's seq record and the
+// conversation's max_seq), except the change notification, without its MaxSeq > 0 check: 0 is needed when a
+// user rejoins, and a group without messages has max seq 0 when a member leaves.
+func (s *groupServer) setConversationMaxSeq(ctx context.Context, conversationID string, userIDs []string, maxSeq int64) error {
+	if err := s.msgClient.SetUserConversationMaxSeq(ctx, conversationID, userIDs, maxSeq); err != nil {
+		return err
+	}
+	_, err := s.conversationClient.UpdateConversation(ctx, &pbconversation.UpdateConversationReq{
+		ConversationID: conversationID,
+		UserIDs:        userIDs,
+		MaxSeq:         wrapperspb.Int64(maxSeq),
+	})
+	return err
 }
 
 func (s *groupServer) SetGroupInfo(ctx context.Context, req *pbgroup.SetGroupInfoReq) (*pbgroup.SetGroupInfoResp, error) {
