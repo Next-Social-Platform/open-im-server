@@ -25,6 +25,7 @@ import (
 	"github.com/openimsdk/open-im-server/v3/pkg/common/servererrs"
 	"github.com/openimsdk/protocol/constant"
 	"github.com/openimsdk/tools/apiresp"
+	"github.com/openimsdk/tools/db/redisutil"
 	"github.com/openimsdk/tools/discovery"
 	"github.com/openimsdk/tools/log"
 	"github.com/openimsdk/tools/mw"
@@ -97,6 +98,11 @@ func newGinRouter(ctx context.Context, client discovery.SvcDiscoveryRegistry, co
 	}
 	r.Use(prommetricsGin(), gin.RecoveryWithWriter(gin.DefaultErrorWriter, mw.GinPanicErr), mw.CorsHandler(), mw.GinParseOperationID(), GinParseToken(rpcli.NewAuthClient(authConn)))
 	u := NewUserApi(user.NewUserClient(userConn), client, config.Share.RpcRegisterName)
+	rdb, err := redisutil.NewRedisClient(ctx, config.RedisConfig.Build())
+	if err != nil {
+		return nil, err
+	}
+	ls := &lastSeenApi{rdb: rdb}
 	m := NewMessageApi(msg.NewMsgClient(msgConn), rpcli.NewUserClient(userConn), config.Share.IMAdminUserID)
 	userRouterGroup := r.Group("/user")
 	{
@@ -113,6 +119,8 @@ func newGinRouter(ctx context.Context, client discovery.SvcDiscoveryRegistry, co
 		userRouterGroup.POST("/subscribe_users_status", u.SubscriberStatus)
 		userRouterGroup.POST("/get_users_status", u.GetUserStatus)
 		userRouterGroup.POST("/get_subscribe_users_status", u.GetSubscribeUsersStatus)
+		// NSP: сүүлд онлайн байсан цаг (nsp_last_seen.go)
+		userRouterGroup.POST("/get_users_last_seen", ls.GetUsersLastSeen)
 
 		userRouterGroup.POST("/process_user_command_add", u.ProcessUserCommandAdd)
 		userRouterGroup.POST("/process_user_command_delete", u.ProcessUserCommandDelete)

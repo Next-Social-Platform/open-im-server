@@ -95,7 +95,15 @@ git rebase v3.8.3-patch.17        # эсвэл: git merge v3.8.3-patch.17
 
 nsp-chat-server-ийн өөрийн admin үйлдлүүд (group удирдлага, зарлал) operationID-д HMAC гарын үсэг тавьдаг. Тиймээс тэдгээр нь webhook шалгалтаас алгасагддаг. Энэ логик nsp-chat-server-ийн `internal/api/nsp/admin_operation.go`-д байгаа.
 
-### 2.4 Build ба тохиргоо
+### 2.4 «Сүүлд онлайн» (last seen)
+
+Хувь чатын толгойд «Сүүлд: өнөөдөр 14:32» харуулахад. Protocol fork-гүй, SDK/websocket-ийн онлайн төлөвийн урсгал өөрчлөгдөөгүй.
+
+- **Бичих:** `SetUserOnline` (rpc-user) бүрт — онлайн болох, 10 мин тутмын сунгалт, офлайн болох — Redis-д `LAST_SEEN:<userID>` = unix сек (TTL 90 хоног). `online_change` publish-ээс өмнө бичигдэнэ. Код: `pkg/common/storage/cache/redis/last_seen.go`.
+- **Унших:** `POST /user/get_users_last_seen` `{"userIDs": ["u1"]}` (≤100), хэрэглэгчийн IM token-оор → `{"lastSeenList": [{"userID": "u1", "online": false, "lastSeen": 1795523220}]}`. `lastSeen=0` бол мэдээлэлгүй. Код: `internal/api/nsp_last_seen.go`.
+- Шинэ gRPC функц нэмэхэд `openimsdk/protocol`-ийг fork хийх шаардлагатай тул **openim-api Redis-ээс шууд уншина**: api процесс одоо `redis.yml`-ийг ачаална (`internal/api/init.go`, `pkg/common/cmd/api.go`). Redis тохиргоо буруу бол openim-api асахгүй.
+
+### 2.5 Build ба тохиргоо
 
 | Файл | Тайлбар |
 |---|---|
