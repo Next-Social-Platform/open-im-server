@@ -120,6 +120,10 @@ func (s *userOnline) SetUserOnline(ctx context.Context, userID string, online, o
 		log.ZError(ctx, "redis SetUserOnline", err, "userID", userID, "online", online, "offline", offline)
 		return err
 	}
+	// NSP: сүүлд онлайн байсан цаг (last_seen.go). Алдаа нь онлайн төлөвийн урсгалыг зогсоохгүй.
+	if err := setLastSeen(ctx, s.rdb, userID, now); err != nil {
+		log.ZWarn(ctx, "redis SetUserOnline lastSeen", err, "userID", userID)
+	}
 	if len(platformIDs) == 0 {
 		return errs.ErrInternalServer.WrapMsg("SetUserOnline redis lua invalid return value")
 	}

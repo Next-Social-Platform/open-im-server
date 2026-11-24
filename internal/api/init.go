@@ -33,6 +33,8 @@ type Config struct {
 	API       config.API
 	Share     config.Share
 	Discovery config.Discovery
+	// NSP: /user/get_users_last_seen (nsp_last_seen.go) Redis-ээс шууд уншина.
+	RedisConfig config.Redis
 }
 
 func Start(ctx context.Context, index int, cfg *Config) error {
